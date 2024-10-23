@@ -23,11 +23,14 @@ const Signup = () => {
 
   const signupSubmitHandler = (e: FormEvent) => {
     e.preventDefault();
+    // console.log(input);
+
     // form validation check start
     const result = userSignupSchema.safeParse(input);
     if (!result.success) {
       const fieldErrors = result.error.formErrors.fieldErrors;
       setErrors(fieldErrors as Partial<SignupInputState>);
+
       return;
     }
   };

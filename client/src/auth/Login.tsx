@@ -24,6 +24,7 @@ const Login = () => {
     if (!result.success) {
       const fieldErrors = result.error.formErrors.fieldErrors;
       setErrors(fieldErrors as Partial<LoginInputState>);
+
       return;
     }
   };
