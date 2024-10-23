@@ -6,12 +6,14 @@ import Signup from "./auth/Signup";
 import ForgotPassword from "./auth/ForgetPassword";
 import ResetPassword from "./auth/ResetPassword";
 import VerifyEmail from "./auth/VerifyEmail";
-import Header from "./components/Header";
+import MainLayout from "./layout/MainLayout";
+import HeroSection from "./components/HeroSection";
 
 const appRouter = createBrowserRouter([
   {
     path: "/",
-    element: <Header />,
+    element: <MainLayout />,
+    children: [{ path: "/", element: <HeroSection /> }],
   },
   {
     path: "/login",
