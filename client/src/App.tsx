@@ -10,6 +10,7 @@ import MainLayout from "./layout/MainLayout";
 import HeroSection from "./components/HeroSection";
 import Profile from "./components/Profile";
 import SearchPage from "./components/SearchPage";
+import RestaurantDetail from "./components/RestaurantDetail";
 
 const appRouter = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const appRouter = createBrowserRouter([
       {
         path: "/search/:text",
         element: <SearchPage />,
+      },
+      {
+        path: "/restaurant/:id",
+        element: <RestaurantDetail />,
       },
     ],
   },
