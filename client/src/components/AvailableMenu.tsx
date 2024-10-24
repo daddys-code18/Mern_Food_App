@@ -21,7 +21,11 @@ const AvailableMenu = () => {
               <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
                 {menu}
               </h2>
-              <p className="text-sm text-gray-600 mt-2">{"delicious"}</p>
+              <p className="text-sm text-gray-600 mt-2">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Provident repellendus illum eum numquam atque et officiis
+                voluptatem, laboriosam sunt error.
+              </p>
               <h3 className="text-lg font-semibold mt-4">
                 Price: <span className="text-[#D19254]">₹{50}</span>
               </h3>

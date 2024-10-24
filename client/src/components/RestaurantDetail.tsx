@@ -3,12 +3,12 @@
 import { Badge } from "./ui/badge";
 import { Timer } from "lucide-react";
 // import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import heroImage from "@/assets/hero_pizza.png";
 import AvailableMenu from "./AvailableMenu";
 
 const RestaurantDetail = () => {
-  const params = useParams();
+  //   const params = useParams();
   //   const { singleRestaurant, getSingleRestaurant } = useRestaurantStore();
 
   //   useEffect(() => {
