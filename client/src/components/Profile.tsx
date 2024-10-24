@@ -56,7 +56,7 @@ const Profile = () => {
       <form
         action=""
         onSubmit={updateProfilehandler}
-        className="max-w-7xl max-auto my-5"
+        className="max-w-7xl mx-auto my-5"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

@@ -27,7 +27,7 @@ const AddMenu = () => {
   const [error, setError] = useState<Partial<MenuFormSchema>>({});
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState<boolean>(false);
-  const [selectedMenu, setSelectedMenu] = useState<any>();
+  const [selectedMenu, setSelectedMenu] = useState<MenuFormSchema>();
 
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
