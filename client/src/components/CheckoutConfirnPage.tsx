@@ -20,7 +20,7 @@ const CheckoutConfirnPage = ({
 }) => {
   const [input, setInput] = useState({
     name: "",
-    email: "",
+    textse: "",
     contact: "",
     address: "",
     city: "",
@@ -33,6 +33,10 @@ const CheckoutConfirnPage = ({
 
   const checkOutHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    {
+      /* Email Feild is not working   */
+    }
     console.log(input);
   };
   let loading = false;
@@ -60,13 +64,14 @@ const CheckoutConfirnPage = ({
                 onChange={changeEventHandler}
               />
             </div>
+            {/* Email Feild is not working   */}
             <div>
               <Label>Email</Label>
               <Input
                 disabled
-                type="email"
-                name="email"
-                value={input.email}
+                type="text"
+                name="textse"
+                value={input.textse}
                 onChange={changeEventHandler}
               />
             </div>
