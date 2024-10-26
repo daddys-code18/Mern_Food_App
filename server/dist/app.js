@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import userRoute from "./routes/user.route.js";
 import restaurantRoute from "./routes/restaurant.route.js";
+import menuRoute from "./routes/menu.route.js";
 config({ path: "./.env" });
 const PORT = process.env.PORT;
 const mongoURI = process.env.MONGO_URI || "";
@@ -24,7 +25,7 @@ app.use(cors(corsOptions));
 // api
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/restaurant", restaurantRoute);
-// app.use("/api/v1/menu", menuRoute);
+app.use("/api/v1/menu", menuRoute);
 // app.use("/api/v1/order", orderRoute);
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
