@@ -44,7 +44,7 @@ export const createRestaurant = async (req: Request, res: Response) => {
   }
 };
 
-export const getrestaurant = async (req: Request, res: Response) => {
+export const getRestaurant = async (req: Request, res: Response) => {
   try {
     const restaurant = await Restaurant.findOne({ user: req.id }).populate(
       "menus"
@@ -63,7 +63,7 @@ export const getrestaurant = async (req: Request, res: Response) => {
   }
 };
 
-export const upadetRestaurant = async (req: Request, res: Response) => {
+export const updateRestaurant = async (req: Request, res: Response) => {
   try {
     const { restaurantName, city, country, deliveryTime, cuisines } = req.body;
     const file = req.file;
