@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import { generateVerificationCode } from "../utils/generateVerifictionCode.js";
 import { generateToken } from "../utils/generateToken.js";
 import { v6 as uuidv6 } from "uuid";
+import cloudinary from "../utils/cloundinary.js";
+import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from "../maitrap/email.js";
 export const signUp = async (req, res) => {
     try {
         const { fullname, email, password, contact } = req.body;
@@ -21,7 +23,7 @@ export const signUp = async (req, res) => {
             verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
         });
         generateToken(res, user);
-        // await sendVerificationEmail(email, verificationToken);
+        await sendVerificationEmail(email, verificationToken);
         const userWithoutPassword = await User.findOne({ email }).select("-password");
         return res.status(201).json({
             success: true,
@@ -86,6 +88,8 @@ export const verifyEmail = async (req, res) => {
         user.verificationToken = undefined;
         user.verificationTokenExpiresAt = undefined;
         await user.save();
+        // send welcome email
+        await sendWelcomeEmail(user.email, user.fullname);
         return res.status(200).json({
             success: true,
             message: "Email verified successfully.",
@@ -126,7 +130,7 @@ export const forgotPassword = async (req, res) => {
         user.resetPasswordToken = resetToken;
         user.resetPasswordTokenExpiresAt = resetTokenExpiresAt;
         // send Email to user to reset password
-        // await sendPasswordResetEmail(user.email, `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`);
+        await sendPasswordResetEmail(user.email, `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`);
         return res.status(200).json({
             success: true,
             message: "Password reset link sent to your email",
@@ -158,10 +162,59 @@ export const resetPassword = async (req, res) => {
         user.resetPasswordTokenExpiresAt = undefined;
         await user.save();
         // send success reset email
-        // await sendResetSuccessEmail(user.email);
+        await sendResetSuccessEmail(user.email);
         return res.status(200).json({
             success: true,
             message: "Password reset successfully.",
+        });
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+export const checkAuth = async (req, res) => {
+    try {
+        const userId = req.id;
+        const user = await User.findById(userId).select("-password");
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            user,
+        });
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+export const updateProfile = async (req, res) => {
+    try {
+        const userId = req.id;
+        const { fullname, email, address, city, country, profilePicture } = req.body;
+        // upload image on cloudinary
+        let cloudResponse;
+        cloudResponse = await cloudinary.uploader.upload(profilePicture);
+        const updatedData = {
+            fullname,
+            email,
+            address,
+            city,
+            country,
+            profilePicture,
+        };
+        const user = await User.findByIdAndUpdate(userId, updatedData, {
+            new: true,
+        }).select("-password");
+        return res.status(200).json({
+            success: true,
+            user,
+            message: "Profile updated successfully",
         });
     }
     catch (error) {

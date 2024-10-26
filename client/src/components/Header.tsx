@@ -174,7 +174,7 @@ const MobileNavbar = () => {
       </SheetTrigger>
       <SheetContent className="flex flex-col">
         <SheetHeader className="flex flex-row items-center justify-between mt-2">
-          <SheetTitle>Indian Cousins</SheetTitle>
+          <SheetTitle>Indiam Cuisine</SheetTitle>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">
@@ -249,8 +249,8 @@ const MobileNavbar = () => {
         <SheetFooter className="flex flex-col gap-4">
           <div className="flex flex-row items-center gap-2">
             <Avatar>
-              <AvatarImage 
-              // src={user?.profilePicture} 
+              <AvatarImage
+              // src={user?.profilePicture}
               />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
@@ -262,8 +262,7 @@ const MobileNavbar = () => {
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Please wait
               </Button>
-          
-        ) : (
+            ) : (
               <Button
                 // onClick={logout}
                 className="bg-orange hover:bg-hoverOrange"
