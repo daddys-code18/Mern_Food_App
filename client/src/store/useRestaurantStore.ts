@@ -12,7 +12,7 @@ export const useRestaurantStore = create<RestaurantState>()(
     (set) => ({
       loading: false,
       restaurant: null,
-      searchrestaurant: null,
+      searchedrestaurant: null,
       appliedFilter: [],
       singleRestaurant: null,
       restaurantOrder: [],
@@ -109,6 +109,18 @@ export const useRestaurantStore = create<RestaurantState>()(
           // if state.restaruant is undefined then return state
           return state;
         });
+      },
+      setAppliedFilter: (value: string) => {
+        set((state) => {
+          const isAlreadyApplied = state.appliedFilter.includes(value);
+          const updatedFilter = isAlreadyApplied
+            ? state.appliedFilter.filter((item) => item !== value)
+            : [...state.appliedFilter, value];
+          return { appliedFilter: updatedFilter };
+        });
+      },
+      resetAppliedFilter: () => {
+        set({ appliedFilter: [] });
       },
     }),
 
