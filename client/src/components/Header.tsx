@@ -38,12 +38,10 @@ import {
   SheetTrigger,
 } from "./ui/sheet";
 import { Separator } from "./ui/separator";
+import { useUserStore } from "@/store/useUserStore";
 
 const Header = () => {
-  let admin = true;
-  let loading = false;
-
-  let user = true;
+  const { user, loading, logout } = useUserStore();
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -69,7 +67,7 @@ const Header = () => {
             Order
           </Link>
 
-          {admin && (
+          {user?.admin && (
             <Menubar>
               <MenubarMenu>
                 <MenubarTrigger>DashBoard</MenubarTrigger>
@@ -135,7 +133,7 @@ const Header = () => {
               </Button>
             ) : (
               <Button
-                // onClick={logout}
+                onClick={logout}
                 className="bg-orange hover:bg-hoverOrange"
               >
                 Logout
@@ -156,9 +154,7 @@ export default Header;
 
 // const MobileNavbar = () => {};
 const MobileNavbar = () => {
-  const user = true;
-  const admin = true;
-  const loading = false;
+  const { user, loading, logout } = useUserStore();
   // const { user, logout, loading } = useUserStore();
   // const { setTheme } = useThemeStore();
   return (
@@ -220,7 +216,7 @@ const MobileNavbar = () => {
             <ShoppingCart />
             <span>Cart (0)</span>
           </Link>
-          {admin && (
+          {user?.admin && (
             <>
               <Link
                 to="/admin/menu"
@@ -264,7 +260,7 @@ const MobileNavbar = () => {
               </Button>
             ) : (
               <Button
-                // onClick={logout}
+                onClick={logout}
                 className="bg-orange hover:bg-hoverOrange"
               >
                 Logout

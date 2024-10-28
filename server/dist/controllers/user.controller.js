@@ -104,7 +104,7 @@ export const verifyEmail = async (req, res) => {
     }
 };
 // User Logout API
-export const logout = async (res) => {
+export const logout = async (_, res) => {
     try {
         return res.clearCookie("token").status(200).json({
             success: true,

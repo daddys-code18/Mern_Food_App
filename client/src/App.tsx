@@ -21,11 +21,13 @@ import AddMenu from "./admin/AddMenu";
 import Orders from "./admin/Orders";
 import Success from "./components/Success";
 import { useUserStore } from "./store/useUserStore";
+import { useEffect } from "react";
+import Loading from "./components/Loading";
 
 const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user } = useUserStore();
   if (!isAuthenticated) {
-    <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace />;
   }
   if (!user?.isVerified) {
     return <Navigate to="/verify-email" replace />;
@@ -48,6 +50,7 @@ const AdminRoutes = ({ children }: { children: React.ReactNode }) => {
   if (!user?.admin) {
     return <Navigate to="/login" replace />;
   }
+  return children;
 };
 const appRouter = createBrowserRouter([
   {
@@ -134,23 +137,24 @@ const appRouter = createBrowserRouter([
   },
   {
     path: "/reset-password",
-    element: (
-      <AuthenicatedUser>
-        <ResetPassword />
-      </AuthenicatedUser>
-    ),
+    element: <ResetPassword />,
   },
   {
     path: "/verify-email",
-    element: (
-      <AuthenicatedUser>
-        <VerifyEmail />
-      </AuthenicatedUser>
-    ),
+    element: <VerifyEmail />,
   },
 ]);
 
 function App() {
+  // const initializeTheme = useThemeStore((state: any) => state.initializeTheme);
+  const { checkAuthentication, isCheckingAuth } = useUserStore();
+  // checking auth every time when page is loaded
+  useEffect(() => {
+    checkAuthentication();
+    // initializeTheme();
+  }, [checkAuthentication]);
+
+  if (isCheckingAuth) return <Loading />;
   return (
     <>
       <RouterProvider router={appRouter}></RouterProvider>

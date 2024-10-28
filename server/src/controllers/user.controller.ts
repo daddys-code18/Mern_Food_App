@@ -130,7 +130,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
 
 // User Logout API
 
-export const logout = async (res: Response) => {
+export const logout = async (_: Request, res: Response) => {
   try {
     return res.clearCookie("token").status(200).json({
       success: true,
@@ -141,7 +141,6 @@ export const logout = async (res: Response) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-
 // user forget password Api
 
 export const forgotPassword = async (req: Request, res: Response) => {
