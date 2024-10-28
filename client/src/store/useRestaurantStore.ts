@@ -93,7 +93,25 @@ export const useRestaurantStore = create<RestaurantState>()(
             : null,
         }));
       },
+      updateMenuToRestaurant: (updatedMenu: MenuItem) => {
+        set((state: any) => {
+          if (state.restaurant) {
+            const updatedMenuList = state.restaurant.menus.map((menu: any) =>
+              menu._id === updatedMenu._id ? updatedMenu : menu
+            );
+            return {
+              restaurant: {
+                ...state.restaurant,
+                menus: updatedMenuList,
+              },
+            };
+          }
+          // if state.restaruant is undefined then return state
+          return state;
+        });
+      },
     }),
+
     {
       name: "restaurant-name",
       storage: createJSONStorage(() => localStorage),
