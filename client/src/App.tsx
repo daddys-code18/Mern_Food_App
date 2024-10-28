@@ -1,6 +1,10 @@
 import Login from "./auth/Login";
 // import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 // import MainLayout from "./MainLayout";
 import Signup from "./auth/Signup";
 import ForgotPassword from "./auth/ForgetPassword";
@@ -16,11 +20,43 @@ import Restaurant from "./admin/Restaurant";
 import AddMenu from "./admin/AddMenu";
 import Orders from "./admin/Orders";
 import Success from "./components/Success";
+import { useUserStore } from "./store/useUserStore";
 
+const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, user } = useUserStore();
+  if (!isAuthenticated) {
+    <Navigate to="/login" replace />;
+  }
+  if (!user?.isVerified) {
+    return <Navigate to="/verify-email" replace />;
+  }
+  return children;
+};
+const AuthenicatedUser = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, user } = useUserStore();
+  if (isAuthenticated && user?.isVerified) {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+};
+const AdminRoutes = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, user } = useUserStore();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  if (!user?.admin) {
+    return <Navigate to="/login" replace />;
+  }
+};
 const appRouter = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: (
+      <ProtectedRoutes>
+        <MainLayout />
+      </ProtectedRoutes>
+    ),
     children: [
       { path: "/", element: <HeroSection /> },
       {
@@ -43,39 +79,74 @@ const appRouter = createBrowserRouter([
         path: "/order/status",
         element: <Success />,
       },
+
+      //admin services start from here
       {
         path: "/admin/restaurant",
-        element: <Restaurant />,
+        element: (
+          <AdminRoutes>
+            <Restaurant />
+          </AdminRoutes>
+        ),
       },
       {
         path: "/admin/menu",
-        element: <AddMenu />,
+        element: (
+          <AdminRoutes>
+            <AddMenu />
+          </AdminRoutes>
+        ),
       },
       {
         path: "/admin/orders",
-        element: <Orders />,
+        element: (
+          <AdminRoutes>
+            <Orders />
+          </AdminRoutes>
+        ),
       },
     ],
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <AuthenicatedUser>
+        <Login />
+      </AuthenicatedUser>
+    ),
   },
   {
     path: "/signup",
-    element: <Signup />,
+    element: (
+      <AuthenicatedUser>
+        <Signup />
+      </AuthenicatedUser>
+    ),
   },
   {
     path: "/forgot-password",
-    element: <ForgotPassword />,
+    element: (
+      <AuthenicatedUser>
+        {" "}
+        <ForgotPassword />
+      </AuthenicatedUser>
+    ),
   },
   {
     path: "/reset-password",
-    element: <ResetPassword />,
+    element: (
+      <AuthenicatedUser>
+        <ResetPassword />
+      </AuthenicatedUser>
+    ),
   },
   {
     path: "/verify-email",
-    element: <VerifyEmail />,
+    element: (
+      <AuthenicatedUser>
+        <VerifyEmail />
+      </AuthenicatedUser>
+    ),
   },
 ]);
 
