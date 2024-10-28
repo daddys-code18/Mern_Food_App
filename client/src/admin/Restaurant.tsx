@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
   RestaurantFormSchema,
   restaurantFromSchema,
@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useRestaurantStore } from "@/store/useRestaurantStore";
 
 const Restaurant = () => {
   const [input, setInput] = useState({
@@ -21,15 +22,20 @@ const Restaurant = () => {
     imageFile: undefined,
   });
   const [errors, setErrors] = useState<Partial<RestaurantFormSchema>>({});
-  const loading = false;
-  const restaurant = true;
 
+  const {
+    loading,
+    restaurant,
+    updateRestaurant,
+    createRestaurant,
+    getRestaurant,
+  } = useRestaurantStore();
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
     setInput({ ...input, [name]: type === "number" ? Number(value) : value });
   };
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(input);
     const result = restaurantFromSchema.safeParse(input);
@@ -37,9 +43,47 @@ const Restaurant = () => {
       const fieldErrors = result.error.formErrors.fieldErrors;
       setErrors(fieldErrors as Partial<RestaurantFormSchema>);
       return;
-      // add restaurant api implementation start from here
+    }
+    // add restaurant api implementation start from here
+    try {
+      const formData = new FormData();
+      formData.append("restaurantName", input.restaurantName);
+      formData.append("city", input.city);
+      formData.append("country", input.country);
+      formData.append("deliveryTime", input.deliveryTime.toString());
+      formData.append("cuisines", JSON.stringify(input.cuisines));
+
+      if (input.imageFile) {
+        formData.append("imageFile", input.imageFile);
+      }
+      if (restaurant) {
+        updateRestaurant(formData);
+      } else {
+        await createRestaurant(formData);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
+  useEffect(() => {
+    const fetchRestaurant = async () => {
+      await getRestaurant();
+      if (restaurant) {
+        setInput({
+          restaurantName: restaurant.restaurantName || "",
+          city: restaurant.city || "",
+          country: restaurant.country || "",
+          deliveryTime: restaurant.deliveryTime || 0,
+          cuisines: restaurant.cuisines
+            ? restaurant.cuisines.map((cuisine: string) => cuisine)
+            : [],
+          imageFile: undefined,
+        });
+      }
+    };
+    fetchRestaurant();
+    console.log(restaurant);
+  }, []);
   return (
     <>
       <div className="">

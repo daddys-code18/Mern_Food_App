@@ -1,5 +1,5 @@
 import { Restaurant } from "../models/restaurant.model.js";
-import uploadImageOnCloudinary from "../utils/cloundinary.js";
+import uploadImageOnCloudinary from "../utils/imageUpload.js";
 import { Order } from "../models/order.model.js";
 export const createRestaurant = async (req, res) => {
     try {
