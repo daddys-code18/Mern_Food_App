@@ -5,7 +5,12 @@ import { generateVerificationCode } from "../utils/generateVerifictionCode.js";
 import { generateToken } from "../utils/generateToken.js";
 import { v4 as uuidv4, v6 as uuidv6 } from "uuid";
 import cloudinary from "../utils/cloundinary.js";
-import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from "../maitrap/email.js";
+import {
+  sendPasswordResetEmail,
+  sendResetSuccessEmail,
+  sendVerificationEmail,
+  sendWelcomeEmail,
+} from "../maitrap/email.js";
 
 export const signUp = async (req: Request, res: Response) => {
   try {
@@ -13,9 +18,10 @@ export const signUp = async (req: Request, res: Response) => {
 
     let user = await User.findOne({ email });
     if (user)
-      return res
-        .status(400)
-        .json({ success: false, message: "Email already exists" });
+      return res.status(400).json({
+        success: false,
+        message: "User already exist with this email",
+      });
 
     const hasdPassword = await bcrypt.hash(password, 10);
     const verificationToken = generateVerificationCode();
@@ -24,6 +30,7 @@ export const signUp = async (req: Request, res: Response) => {
       fullname,
       email,
       password: hasdPassword,
+      contact: Number(contact),
       verificationToken,
       verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
     });
@@ -157,7 +164,10 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
     // send Email to user to reset password
 
-    await sendPasswordResetEmail(user.email, `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`);
+    await sendPasswordResetEmail(
+      user.email,
+      `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`
+    );
 
     return res.status(200).json({
       success: true,

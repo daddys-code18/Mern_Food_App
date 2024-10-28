@@ -4,21 +4,23 @@ import { generateVerificationCode } from "../utils/generateVerifictionCode.js";
 import { generateToken } from "../utils/generateToken.js";
 import { v6 as uuidv6 } from "uuid";
 import cloudinary from "../utils/cloundinary.js";
-import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from "../maitrap/email.js";
+import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail, } from "../maitrap/email.js";
 export const signUp = async (req, res) => {
     try {
         const { fullname, email, password, contact } = req.body;
         let user = await User.findOne({ email });
         if (user)
-            return res
-                .status(400)
-                .json({ success: false, message: "Email already exists" });
+            return res.status(400).json({
+                success: false,
+                message: "User already exist with this email",
+            });
         const hasdPassword = await bcrypt.hash(password, 10);
         const verificationToken = generateVerificationCode();
         user = await User.create({
             fullname,
             email,
             password: hasdPassword,
+            contact: Number(contact),
             verificationToken,
             verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
         });
