@@ -5,22 +5,23 @@ import { Button } from "./ui/button";
 // import { useOrderStore } from "@/store/useOrderStore";
 import { useEffect } from "react";
 import { CartItem } from "@/types/cartType";
+import { useOrderStore } from "@/store/useOrderStore";
 
 const Success = () => {
-  //   const { orders, getOrderDetails } = useOrderStore();
+  const { orders, getOrderDetails } = useOrderStore();
 
-  //   useEffect(() => {
-  //     getOrderDetails();
-  //   }, []);
+  useEffect(() => {
+    getOrderDetails();
+  }, []);
 
-  //   if (orders.length === 0)
-  //     return (
-  //       <div className="flex items-center justify-center min-h-screen">
-  //         <h1 className="font-bold text-2xl text-gray-700 dark:text-gray-300">
-  //           Order not found!
-  //         </h1>
-  //       </div>
-  //     );
+  if (orders.length === 0)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <h1 className="font-bold text-2xl text-gray-700 dark:text-gray-300">
+          Order not found!
+        </h1>
+      </div>
+    );
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 px-4">
@@ -36,17 +37,9 @@ const Success = () => {
             Order Summary
           </h2>
           {/* Your Ordered Item Display here  */}
-          {[1].map((order: any, index: number) => (
+          {orders.map((order: any, index: number) => (
             <div key={index}>
-              {[
-                {
-                  name: "Briyani",
-                  description:
-                    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nulla optio rem repudiandae alias laudantium expedita quos facilis fuga ut ea!",
-                  price: 120,
-                  image: "https://via.placeholder.com/150",
-                },
-              ].map((item: CartItem) => (
+              {order.cartItems.map((item: CartItem) => (
                 <div className="mb-4">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center">
