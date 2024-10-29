@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   Loader2,
@@ -11,16 +11,18 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
+import { useUserStore } from "@/store/useUserStore";
 
 const Profile = () => {
+  const { user, updateProfile } = useUserStore();
   const [isLoading, setIsLoading] = useState(false);
   const [profileData, setProfileData] = useState({
-    fullname: "",
-    email: "",
-    address: "",
-    city: "",
-    country: "",
-    profilePicture: "",
+    fullname: user?.fullname || "",
+    email: user?.email || "",
+    address: user?.address || "",
+    city: user?.city || "",
+    country: user?.country || "",
+    profilePicture: user?.profilePicture || "",
   });
   const imageRef = useRef<HTMLInputElement | null>(null);
   const [selectedProfilePicture, setSelectedProfilePicture] = useState<string>(
@@ -47,9 +49,16 @@ const Profile = () => {
     const { name, value } = e.target;
     setProfileData({ ...profileData, [name]: value });
   };
-  const updateProfilehandler = (e: FormEvent<HTMLFormElement>) => {
+  const updateProfilehandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(profileData);
+    // console.log(profileData);
+    try {
+      setIsLoading(true);
+      await updateProfile(profileData);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
   };
   return (
     <>
@@ -92,6 +101,7 @@ const Profile = () => {
             <div className="w-full">
               <Label>Email</Label>
               <input
+                disabled
                 type="text"
                 name="email"
                 value={profileData.email}
